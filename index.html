@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- the old workers.dev address and www. send visitors to sound, keeping the path and #link (so shared
+       journeys and genres still open). Done in the page: a host-based redirect on the worker would count every
+       request against the free plan's daily limit. -->
+  <script>if (/workers\.dev$|^www\./.test(location.hostname)) location.replace("https://sound" + location.pathname + location.search + location.hash);</script>
+  <title>Sound</title>
+  <link rel="icon" href="/favicon.ico?v=3" sizes="48x48">
+  <link rel="icon" href="/img/icon-192.png?v=3" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=3">
+  <meta name="description" content="A map of 6,291 music genres, grouped by how they sound.">
+  <!-- link previews (Open Graph / X): absolute URLs on sound -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sound">
+  <meta property="og:title" content="sound">
+  <meta property="og:description" content="A map of 6,291 music genres, grouped by how they sound.">
+  <link rel="canonical" href="https://sound/">
+  <meta property="og:url" content="https://sound/">
+  <meta property="og:image" content="https://sound/img/og-card.jpg?v=5">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The sound star map: thousands of music genres as glowing stars, grouped into pop, rock, hip hop, electronic, jazz and more.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sound/img/og-card.jpg?v=5">
+  <link rel="stylesheet" href="atlas.css?v=103">
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.169.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.169.0/examples/jsm/" } }
+  </script>
+  <script>
+    // Opened inside another website (an iframe on a different domain)? Then show a screen that sends people to
+    // sound instead of running the map there. Our own helper pages (same domain) still embed it normally.
+    // Browsers block automatic top-level redirects from iframes, so it is one click (see docs/DECISIONS.md).
+    // Sites allowed to embed the map anyway (by host name of the page around it):
+    window.SOS_FRAMED = false;
+  </script>
+</head>
+<body>
+  <div id="framed-screen">
+    <div class="wordmark">sound</div>
+    <p>A map of 6,291 music genres</p>
+    <a id="framed-open" href="https://sound/" target="_top">Open sound <span aria-hidden="true">↗</span></a>
+  </div>
+  <canvas id="sky" tabindex="0" aria-label="Star map of 6,291 music genres. Use the search box to find a genre; arrow keys pan, plus and minus zoom."></canvas>
+  <div id="labels" aria-hidden="true"></div>
+
+  <header class="hud top">
+    <div class="brand-col">
+      <button type="button" class="brand" id="home-title" title="Back to the whole map">
+        <h1 class="wordmark" aria-label="Sound">sound</h1>
+      </button>
+      <p class="by"><a href="https://www.instagram.com/sound/" rel="noopener" target="_blank">@sound</a> · <a href="mailto:contact@sound">contact</a></p>
+    </div>
+    <button class="tour-btn" id="tour-btn" type="button" aria-label="Take a tour" data-tip="Take a tour">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5v19l16-9.5z"/></svg><span class="tour-lbl" aria-hidden="true">Tour</span>
+    </button>
+    <form class="search" id="search" role="search">
+      <label class="sr" for="q">Find a genre</label>
+      <input id="q" type="search" placeholder="Search genres or artists" autocomplete="off" spellcheck="false"
+             role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-list">
+      <ul class="q-list" id="q-list" role="listbox" hidden></ul>
+    </form>
+    <p class="stats" id="stats">Loading the sound…</p>
+    <button class="icon-btn" id="drift-btn" type="button" title="Drift: wander from genre to genre" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 15.5c3-5.5 5.5-5.5 7.5 0s4.5 5.5 7.5 0c1-1.8 2-3 3.5-3.5"/><circle cx="21" cy="11.6" r="1.3"/></svg>
+      <span class="sr">Drift</span>
+    </button>
+    <button class="icon-btn" id="mute-btn" type="button" title="Mute clips (M)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="cross" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+      <span class="sr">Mute clips</span>
+    </button>
+    <button class="icon-btn" id="settings-btn" aria-expanded="false" aria-controls="settings" title="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+      <span class="sr">Graph settings</span>
+    </button>
+  </header>
+
+  <aside class="panel settings" id="settings" hidden aria-label="Settings">
+    <button class="close" id="settings-close" type="button" aria-label="Close settings">×</button>
+    <h2>Settings</h2>
+    <details open>
+      <summary>Broad groups</summary>
+      <p class="fine">Click a group to fade it.</p>
+      <ul class="legend" id="legend"></ul>
+    </details>
+    <details open>
+      <summary>Links</summary>
+      <div class="seg" id="s-linkmode" role="radiogroup" aria-label="Links between genres">
+        <button type="button" role="radio" data-mode="0">Off</button>
+        <button type="button" role="radio" data-mode="1">Closest</button>
+        <button type="button" role="radio" data-mode="3">Nearest 3</button>
+      </div>
+      <p class="fine">Lines join each genre to its closest neighbours.</p>
+    </details>
+    <details open>
+      <summary>Sound</summary>
+      <label class="row">Volume <input type="range" id="s-volume" min="0" max="1" step="0.05" value="0.5"></label>
+      <label class="row check"><input type="checkbox" id="s-hoverplay"> Play clips when hovering genres on the map</label>
+      <p class="fine">In the overlap view, hovering always plays.</p>
+    </details>
+    <details>
+      <summary>How to explore</summary>
+      <dl class="keys">
+        <dt>Click a name</dt><dd>go one level deeper</dd>
+        <dt>Drag</dt><dd>orbit in 3D</dd>
+        <dt>Shift-drag</dt><dd>pan</dd>
+        <dt>Scroll / pinch</dt><dd>zoom to the cursor</dd>
+        <dt>See overlaps</dt><dd>genres sharing its artists</dd>
+        <dt>+ / − · arrows</dt><dd>zoom · pan</dd>
+        <dt>0 · M · Esc</dt><dd>reset view · mute · back</dd>
+        <div id="keys-fs" class="keys-row"><dt>F</dt><dd>fullscreen</dd></div>
+      </dl>
+    </details>
+    <details>
+      <summary>Design</summary>
+      <label class="row">Star size <input type="range" id="s-size" min="0.4" max="2.5" step="0.05" value="1"></label>
+      <label class="row">Glow <input type="range" id="s-bloom" min="0" max="2.5" step="0.05" value="0.85"></label>
+      <label class="row">Link brightness <input type="range" id="s-linkop" min="0" max="0.6" step="0.01" value="0.18"></label>
+      <button type="button" class="wide" id="s-reset">Reset design</button>
+    </details>
+  </aside>
+
+  <aside class="panel card" id="card" hidden aria-label="Details"></aside>
+
+  <div class="ovhead" id="ov-head" hidden>
+    <button type="button" class="ov-btn" id="ov-back" title="Back along your trail" aria-label="Back">←</button>
+    <div class="ov-text"><span class="ov-kicker">Shared artists</span><b id="ov-title"></b></div>
+    <button type="button" class="ov-btn wide-btn" id="ov-close" title="Back to the map (Esc)">Map</button>
+  </div>
+  <div class="tip" id="tip" hidden></div>
+  <p class="sr" id="announce" aria-live="polite"></p>
+  <div class="hud now" id="now" aria-live="polite">
+    <div class="now-pill">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="now-text"><b id="now-title"></b><span id="now-sub"></span></span>
+      <button type="button" id="now-stop" aria-label="Stop the clip"></button>
+    </div>
+    <a id="now-spotify" class="now-spotify" target="_blank" rel="noopener" hidden title="Open this song on Spotify" aria-label="Open this song on Spotify"><img src="img/spotify-icon-white.svg" alt="" width="22" height="22"></a>
+  </div>
+  <p class="hud tipline" id="tipline" aria-live="polite"></p>
+  <p class="hud hint" id="hint">scroll to zoom · drag to orbit · click a name to go deeper</p>
+
+  <!-- map control, bottom right like a map app's re-centre button -->
+  <button class="icon-btn hud recentre" id="home-btn" type="button" title="Centre and zoom out (0)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle class="dot" cx="12" cy="12" r="3"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12H5M19 12h3.5"/></svg>
+    <span class="sr">Centre and zoom out</span>
+  </button>
+
+  <!-- the tour: caption + Stop while it plays (its button sits in the header) -->
+  <div class="tour-cap" id="tour-cap" hidden>
+    <p id="tour-line" aria-live="polite"></p>
+    <div class="tour-nav">
+      <button type="button" id="tour-prev" class="tour-arrow" aria-label="Previous part" title="Previous part (←)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"/></svg></button>
+      <button type="button" id="tour-stop">Stop</button>
+      <button type="button" id="tour-next" class="tour-arrow" aria-label="Next part" title="Next part (→)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg></button>
+    </div>
+  </div>
+
+  <footer class="hud credit">
+    <span class="src">Data: <a href="https://everynoise.com/" rel="noopener" target="_blank">Every Noise at Once</a> by Glenn McDonald, built on Spotify data (2023). Audio previews from Spotify.</span>
+  </footer>
+
+  <script>
+    // the map only runs on sound itself; inside another site the framed screen above is all there is
+    if (window.SOS_FRAMED) { const a = document.getElementById("framed-open"); a.href = "https://sound/" + location.hash; }
+    else { const s = document.createElement("script"); s.type = "module"; s.src = "js/atlas.js?v=136"; document.body.append(s); }
+  </script>
+  <!-- Cloudflare Web Analytics: cookie-less visit counts for sound (token from the Cloudflare dashboard) -->
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "693c9bf25876458c851a119792b99aff"}'></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"bab92cfd88364062b7ace35583aae3fe","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
