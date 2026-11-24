@@ -44,7 +44,7 @@ button, input { font: inherit; color: inherit; }
 }
 .lbl.group {
   font: 600 24px/1 var(--body); letter-spacing: 0.005em; color: #fff;
-  text-shadow: 0 0 20px var(--glow, #b8a6ff), 0 0 6px var(--glow, #b8a6ff), 0 0 2px rgba(10, 10, 10, 0.9);
+  text-shadow: 0 0 20px var(--glow, #b8a6ff), 0 0 6px var(--glow, #b8a6ff), 0 0 2px rgba(36, 11, 25, 0.9);
 }
 .lbl.r1 { font-family: var(--display); font-weight: 700; color: #fff; letter-spacing: 0.02em; text-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 0 4px var(--void); }
 .lbl.r2 { font-weight: 650; color: #f4f1ff; }
@@ -63,7 +63,7 @@ button, input { font: inherit; color: inherit; }
 .top {
   top: 0; left: 0; right: 0; display: flex; gap: 14px; align-items: center;
   padding: 14px var(--gutter); pointer-events: none;
-  background: linear-gradient(180deg, rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0));
+  background: linear-gradient(180deg, rgba(36, 11, 25, 0.75), rgba(36, 11, 25, 0));
 }
 .top > * { pointer-events: auto; }
 .brand { display: flex; align-items: center; gap: 10px; flex: none; background: none; border: 0; padding: 4px 6px 4px 0; cursor: pointer; color: var(--ink); }
@@ -470,21 +470,21 @@ html.calm .tipline { transition: none; }
   margin: 0 0 14px; min-height: 2.5em; display: flex; align-items: flex-end; justify-content: center;
   font: 600 clamp(19px, 2.6vw, 30px)/1.25 var(--display); color: var(--ink); letter-spacing: -0.005em; text-wrap: balance;
   /* a tight dark shadow for legibility over bright stars, a soft dark halo, then the faint violet glow */
-  text-shadow: 0 1px 2px #000, 0 2px 4px rgba(0, 0, 0, 0.95), 0 3px 14px rgba(0, 0, 0, 0.95), 0 0 34px rgba(10, 10, 10, 0.95),
-    0 0 60px rgba(10, 10, 10, 0.85), 0 0 22px rgba(184, 166, 255, 0.3);
+  text-shadow: 0 1px 2px #000, 0 2px 4px rgba(0, 0, 0, 0.95), 0 3px 14px rgba(0, 0, 0, 0.95), 0 0 34px rgba(36, 11, 25, 0.95),
+    0 0 60px rgba(36, 11, 25, 0.85), 0 0 22px rgba(184, 166, 255, 0.3);
   opacity: 0; transform: translateY(8px); transition: opacity 600ms ease, transform 900ms ease;
 }
 #tour-line.on { opacity: 1; transform: none; }
 #tour-stop {
   pointer-events: auto; border: 0; background: none; cursor: pointer; padding: 6px 12px; color: var(--mute);
   font: 600 11px/1 var(--body); letter-spacing: 0.32em; text-transform: uppercase; transition: color 200ms ease;
-  text-shadow: 0 1px 2px #000, 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 20px rgba(10, 10, 10, 0.95);
+  text-shadow: 0 1px 2px #000, 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 20px rgba(36, 11, 25, 0.95);
 }
 #tour-stop:hover, #tour-stop:focus-visible { color: var(--ink); }
 .tour-nav { display: inline-flex; align-items: center; gap: 6px; pointer-events: auto; }
 .tour-arrow {
   width: 28px; height: 28px; display: grid; place-items: center; padding: 0; cursor: pointer; color: var(--mute);
-  border: 1px solid var(--edge); border-radius: 50%; background: rgba(10, 10, 10, 0.55);
+  border: 1px solid var(--edge); border-radius: 50%; background: rgba(36, 11, 25, 0.55);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); transition: color 200ms ease, border-color 200ms ease, opacity 200ms ease;
 }
 .tour-arrow svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -497,7 +497,7 @@ body .hud.top, body .settings, body .recentre { transition: opacity 700ms ease; 
 .tour-cap { transition: left 600ms ease, bottom 600ms ease, top 600ms ease, width 600ms ease; }
 .tour-cap::before {
   content: ""; position: absolute; z-index: -1; left: -12%; right: -12%; top: -30%; bottom: -25%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(10, 10, 10, 0.72), rgba(10, 10, 10, 0.4) 55%, transparent);
+  background: radial-gradient(closest-side, rgba(36, 11, 25, 0.72), rgba(36, 11, 25, 0.4) 55%, transparent);
 }
 body.touring .hud.top, body.touring .settings, body.touring .hint,
 body.touring .tipline, body.touring .recentre, body.touring .tour-btn { opacity: 0 !important; pointer-events: none !important; }
