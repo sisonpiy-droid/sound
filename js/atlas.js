@@ -18,10 +18,10 @@ const S = {
   venn: 40, sparks: !reduceMotion, hoverPlay: false, lens: true,
 };
 const GROUP_COLORS = {
-  "pop": "#ff5fc4", "electronic": "#38dcff", "hip hop": "#ffb238", "r&b": "#ff7a57", "latin": "#ffe15c",
-  "reggae": "#5dff9a", "indie": "#a58bff", "rock": "#ff3f5f", "punk": "#c4ff3a", "metal": "#7f95ff",
-  "folk": "#e9c27c", "country": "#ff9a4d", "blues": "#3a74ff", "jazz": "#d468ff", "classical": "#f4f0ff",
-  "worship": "#9ef4ff", "children": "#ffc0dd",
+  "pop": "#ff007f", "electronic": "#00f0ff", "hip hop": "#ff8c00", "r&b": "#7000ff", "latin": "#ffea00",
+  "reggae": "#39ff14", "indie": "#b800ff", "rock": "#ff0000", "punk": "#ccff00", "metal": "#0055ff",
+  "folk": "#ff5e00", "country": "#ffae00", "blues": "#0022ff", "jazz": "#ff00aa", "classical": "#e0e0e0",
+  "worship": "#00bbff", "children": "#ffa6ea",
 };
 // Data files are cached by the browser like scripts; bump DATA_V whenever a scripts/build_*.py output changes format,
 // or old cached files get read with new code (happened once: clips.json changed from ids to [id, track]).
