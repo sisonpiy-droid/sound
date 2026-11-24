@@ -38,7 +38,7 @@ const canvas = $("sky"), labelLayer = $("labels"), tip = $("tip"), card = $("car
 // ---------------------------------------------------------------- three setup
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2));
-renderer.setClearColor(0x03020a, 1);
+renderer.setClearColor(0x0d152b, 1);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(FOV, 1, 1, 80000);
 const composer = new EffectComposer(renderer);
