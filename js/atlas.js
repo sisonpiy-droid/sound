@@ -99,18 +99,43 @@ scene.add(skyQuad);
     col.set(warm > 0.8 ? [1, 0.85, 0.7] : warm > 0.5 ? [0.75, 0.82, 1] : [0.9, 0.9, 1], i * 3);
     size[i] = Math.random() < 0.97 ? 0.6 + Math.random() * 1.1 : 1.8 + Math.random() * 1.6;
   }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  g.setAttribute("color", new THREE.BufferAttribute(col, 3));
-  g.setAttribute("aSize", new THREE.BufferAttribute(size, 1));
-  const m = new THREE.ShaderMaterial({
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uTime },
-    vertexShader: `attribute float aSize; attribute vec3 color; varying vec3 vC; varying float vA; uniform float uTime;
-      void main(){ vC = color; vA = 0.55 + 0.45*sin(uTime*0.7 + position.x*0.013);
-        gl_PointSize = aSize * ${renderer.getPixelRatio().toFixed(2)}; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
-    fragmentShader: `varying vec3 vC; varying float vA; void main(){ float r = length(gl_PointCoord-0.5)*2.; gl_FragColor = vec4(vC*exp(-r*r*3.)*0.55*vA, 1.); }`,
+  
+  // Create 3D Spheres using InstancedMesh
+  const sphereGeo = new THREE.SphereGeometry(1, 16, 16);
+  const sphereMat = new THREE.MeshStandardMaterial({ 
+      color: 0xffffff,
+      emissive: 0xffffff,
+      emissiveIntensity: 0.8,
+      roughness: 0.2,
+      metalness: 0.8,
+      transparent: true,
+      opacity: 0.9
   });
-  const pts = new THREE.Points(g, m); pts.frustumCulled = false; pts.renderOrder = -9;
+  
+  const pts = new THREE.InstancedMesh(sphereGeo, sphereMat, n); // 'n' is the number of nodes
+  
+  const dummy = new THREE.Object3D();
+  for (let i = 0; i < n; i++) {
+      dummy.position.set(pos[i*3], pos[i*3+1], pos[i*3+2]);
+      
+      // Scale based on original aSize logic but adjusted for 3D sphere volume
+      let s = size[i] * 0.15; 
+      dummy.scale.set(s, s, s);
+      dummy.updateMatrix();
+      pts.setMatrixAt(i, dummy.matrix);
+      
+      pts.setColorAt(i, new THREE.Color(col[i*3], col[i*3+1], col[i*3+2]));
+  }
+  pts.instanceMatrix.needsUpdate = true;
+  pts.instanceColor.needsUpdate = true;
+
+  // We need to add some lighting since spheres need light to look 3D (StandardMaterial)
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  dirLight.position.set(100, 100, 500);
+  scene.add(dirLight);
+ pts.frustumCulled = false; pts.renderOrder = -9;
   scene.add(pts);
 }
 
