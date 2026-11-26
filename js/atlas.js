@@ -102,15 +102,31 @@ scene.add(skyQuad);
   
   // Create 3D Spheres using InstancedMesh
   const sphereGeo = new THREE.SphereGeometry(1, 16, 16);
-  const sphereMat = new THREE.MeshStandardMaterial({ 
+  const sphereMat = new THREE.MeshPhysicalMaterial({ 
       color: 0xffffff,
-      emissive: 0xffffff,
-      emissiveIntensity: 0.8,
-      roughness: 0.2,
-      metalness: 0.8,
+      metalness: 0.1,
+      roughness: 0.1,
+      transmission: 0.9, // glass-like
+      thickness: 1.5,
       transparent: true,
-      opacity: 0.9
+      opacity: 1.0,
+      envMapIntensity: 1.0
   });
+  
+  // Custom shader tweak to make instanceColor affect emissive for glowing effect
+  sphereMat.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader.replace(
+          '#include <color_vertex>',
+          `#include <color_vertex>
+           vColor = instanceColor;`
+      );
+      shader.fragmentShader = shader.fragmentShader.replace(
+          '#include <emissivemap_fragment>',
+          `#include <emissivemap_fragment>
+           totalEmissiveRadiance += vColor * 0.6;` // 60% of their color glows
+      );
+  };
+
   
   const pts = new THREE.InstancedMesh(sphereGeo, sphereMat, n); // 'n' is the number of nodes
   
@@ -130,11 +146,14 @@ scene.add(skyQuad);
   pts.instanceColor.needsUpdate = true;
 
   // We need to add some lighting since spheres need light to look 3D (StandardMaterial)
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
   scene.add(ambientLight);
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 2.5);
   dirLight.position.set(100, 100, 500);
   scene.add(dirLight);
+  const fillLight = new THREE.DirectionalLight(0x00f0ff, 1.5);
+  fillLight.position.set(-100, -100, -500);
+  scene.add(fillLight);
  pts.frustumCulled = false; pts.renderOrder = -9;
   scene.add(pts);
 }

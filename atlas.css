@@ -538,3 +538,27 @@ html.framed #framed-screen {
 #framed-open { margin-top: 6px; padding: 11px 20px; border-radius: 999px; text-decoration: none; color: var(--ink); font-weight: 600;
   background: linear-gradient(120deg, rgba(184, 166, 255, 0.22), rgba(80, 220, 255, 0.12)); border: 1px solid var(--edge); }
 #framed-open:hover, #framed-open:focus-visible { background: linear-gradient(120deg, rgba(184, 166, 255, 0.34), rgba(80, 220, 255, 0.18)); }
+
+.hud, .info-panel, #tooltip, .help {
+    background: rgba(10, 15, 30, 0.4) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5) !important;
+    border-radius: 12px !important;
+}
+
+/* Modernize the fonts slightly */
+body {
+    font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif !important;
+    letter-spacing: 0.5px;
+}
+
+.wordmark {
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 4px !important;
+    background: linear-gradient(90deg, #00ffa6, #00b8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
