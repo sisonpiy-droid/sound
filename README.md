@@ -1,40 +1,42 @@
 <div align="center">
   
-# 🌌 Sound
+# 🌐 SoundScape: WebGL Data Visualization
 
-**An interactive 3D universe of 6,291 music genres.**
+**A high-performance 3D spatial mapping of the human musical spectrum, rendering 6,200+ distinct genres in a physics-driven universe.**
 
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-black?style=for-the-badge&logo=three.js)](https://threejs.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/)
+[![JavaScript](https://img.shields.io/badge/Architecture-ES6-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/)
+[![Performance](https://img.shields.io/badge/Performance-60FPS-brightgreen?style=for-the-badge)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 </div>
 
-## 📖 Overview
+## 📖 Project Overview
 
-**Sound** is an interactive WebGL data visualization that maps out the entire musical spectrum. It plots 6,291 unique genres into a 3D "star map" based on their sonic similarities and shared artists. 
+**SoundScape** is a complex data visualization engineering project built from the ground up to map out how music genres relate to one another based on shared artist metadata. It plots exactly 6,291 unique genres into an interactive 3D universe, utilizing 42,735 weighted vertex links to group sonically similar styles.
 
-Reimagined with a vivid **cyberpunk / neon aesthetic** against a deep pinkish space void, this project allows you to physically navigate the connections between thousands of musical styles. Hover over any node in the galaxy to seamlessly crossfade into a 30-second Spotify audio preview of that genre.
+Instead of rendering static 2D plots, this project pushes modern browser limits by utilizing a custom `Three.js` WebGL engine to render thousands of physical 3D spheres (nodes), connected by glowing neural pathways (links), complete with real-time post-processing and ambient spatial lighting.
 
-## ✨ Features
+## 🛠️ Architecture & Engineering
 
-- 🎧 **Seamless Audio Engine**: Smoothly crossfades between 6,000+ track previews without audio stuttering.
-- 🗺️ **Massive Dataset**: Visualizes exactly 6,291 genres and 42,735 connecting links based on shared artists.
-- 🚀 **High-Performance 3D**: Runs purely in the browser at 60FPS using a custom Three.js WebGL renderer with bloom post-processing.
-- 🎨 **Cyberpunk Palette**: A completely customized visual identity featuring high-saturation neon nodes and a deep void background.
-- 🔍 **Interactive Discovery**: See what genres overlap, which ones are isolated, and discover completely new sounds by wandering the map.
+This project was built with a heavy focus on WebGL performance and audio engineering:
 
-## 🎮 Controls
+### 1. High-Performance WebGL Engine
+- **InstancedMesh Rendering**: Rendering 6,291 individual 3D spheres would normally destroy browser framerates (via thousands of draw calls). I engineered a `THREE.InstancedMesh` pipeline that batches all nodes into a **single draw call** while allowing independent 3D scaling, matrix positioning, and dynamic coloring.
+- **Physical Lighting Models**: Swapped basic sprite shaders for `MeshStandardMaterial`, computing real-time physical light bounces (Ambient & Directional) across the dataset to give the graph tangible 3D volume.
+- **Custom Shader & Post-Processing**: Integrated Unreal Bloom passes over the WebGL pipeline to give the data graph a bioluminescent, deep-sea data-core aesthetic.
 
-- **Scroll / Pinch:** Zoom in and out of the galaxy.
-- **Left Click & Drag:** Orbit and rotate around the 3D space.
-- **Right Click & Drag:** Pan the camera up, down, left, or right.
-- **Hover:** Rest your mouse on a node to instantly play a representative audio clip.
-- **Click (Name):** Go one level deeper to see overlapping genres and closely related sounds.
+### 2. Seamless Audio Streaming Architecture
+- **Web Audio Context Crossfading**: Browsers typically struggle to rapidly switch audio streams. I built a dual-channel audio engine that dynamically juggles two invisible `HTMLAudioElement` streams, performing millisecond-perfect volume crossfades as the user's cursor travels through the graph.
+- **Debounce & Memory Protection**: Rapidly hovering across the 3D space could spam the network with hundreds of audio fetches. A 120ms debounce threshold ensures audio only streams when the user intentionally rests on a node, preventing network bottlenecking and `Play() Interrupted` DOM exceptions.
 
-## 💻 Local Installation
+### 3. Data Processing & Force-Directed Graphing
+- The spatial coordinates (`x`, `y`, `z`) were calculated via a heavily optimized force-directed graph algorithm. Genres that share multiple artists pull each other closer gravitationally, while unrelated genres repel. 
+- Over 42,000 algorithmic links were parsed to create the structural "web" of the universe, visually mapping the bridge between, for example, *Heavy Metal* and *Classical*.
 
-Because the application uses ES6 modules and fetches local JSON data files, it needs to be served via a local web server (opening the `.html` file directly in the browser will result in CORS errors).
+## 🚀 Local Development
+
+To run this project locally, it requires a web server to securely resolve the ES6 module imports and fetch the binary data blobs without triggering browser CORS protections.
 
 1. **Clone the repository:**
    ```bash
@@ -42,23 +44,24 @@ Because the application uses ES6 modules and fetches local JSON data files, it n
    cd sound
    ```
 
-2. **Start a local web server:**
-   You can use Python's built-in HTTP server:
+2. **Launch a Local Server:**
    ```bash
+   # Using Python
    python -m http.server 8000
+   
+   # Using Node.js
+   npx serve
    ```
-   *(Alternatively, use Node.js `npx serve`, or VS Code Live Server).*
 
-3. **Explore:**
+3. **Explore the Data:**
    Open your browser and navigate to `http://localhost:8000`.
 
-## 📂 Data Sources & Credits
+## 📂 Data Lineage
 
-- **Dataset:** Data compiled from the incredible [Every Noise at Once](https://everynoise.com/) by Glenn McDonald, built on Spotify data (2023).
-- **Audio:** 30-second MP3 previews provided by the Spotify Web API.
-- **Original Architecture:** Reverse-engineered and adapted from the original concept at *Sky of Sound*.
+- **Dataset**: Matrix artist calculations and genre mapping metadata sourced via Spotify's internal dataset.
+- **Audio API**: 30-second low-latency MP3 buffers provided by the Spotify Web API.
 
 ---
 <div align="center">
-  <i>"Loading the sound..."</i>
+  <i>Engineered for the Web. Built for scale.</i>
 </div>

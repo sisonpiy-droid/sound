@@ -18,10 +18,10 @@ const S = {
   venn: 40, sparks: !reduceMotion, hoverPlay: false, lens: true,
 };
 const GROUP_COLORS = {
-  "pop": "#ff007f", "electronic": "#00f0ff", "hip hop": "#ff8c00", "r&b": "#7000ff", "latin": "#ffea00",
-  "reggae": "#39ff14", "indie": "#b800ff", "rock": "#ff0000", "punk": "#ccff00", "metal": "#0055ff",
-  "folk": "#ff5e00", "country": "#ffae00", "blues": "#0022ff", "jazz": "#ff00aa", "classical": "#e0e0e0",
-  "worship": "#00bbff", "children": "#ffa6ea",
+  "pop": "#00ffa6", "electronic": "#00b8ff", "hip hop": "#b700ff", "r&b": "#ff009d", "latin": "#00ffea",
+  "reggae": "#00ff3c", "indie": "#ffffff", "rock": "#7700ff", "punk": "#ff0055", "metal": "#4400ff",
+  "folk": "#00e5ff", "country": "#00ff88", "blues": "#00aaff", "jazz": "#e100ff", "classical": "#c2f0ff",
+  "worship": "#00ffc8", "children": "#ff00ea",
 };
 // Data files are cached by the browser like scripts; bump DATA_V whenever a scripts/build_*.py output changes format,
 // or old cached files get read with new code (happened once: clips.json changed from ids to [id, track]).
@@ -38,7 +38,7 @@ const canvas = $("sky"), labelLayer = $("labels"), tip = $("tip"), card = $("car
 // ---------------------------------------------------------------- three setup
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2));
-renderer.setClearColor(0x240b19, 1);
+renderer.setClearColor(0x020202, 1);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(FOV, 1, 1, 80000);
 const composer = new EffectComposer(renderer);
